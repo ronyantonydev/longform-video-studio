@@ -9,8 +9,12 @@ if command -v ffmpeg >/dev/null 2>&1; then
 else bad ffmpeg; fi
 command -v parakeet-mlx >/dev/null 2>&1 && ok parakeet-mlx || bad "parakeet-mlx (word timings)"
 command -v npx >/dev/null 2>&1 && ok npx || bad npx
-echo "Keys (names only, values never shown):"
 S=.engine/settings/settings.env
-for k in GOOGLE_AI_STUDIO_API_KEY FREESOUND_API_KEY; do
+voice=$( [ -f "$S" ] && sed -n 's/^VOICE_PROVIDER=\([a-z]*\).*/\1/p' "$S" )
+echo "Voice: ${voice:-not set}"
+echo "Keys (names only, values never shown):"
+keys=FREESOUND_API_KEY
+[ "$voice" = google ] && keys="GOOGLE_AI_STUDIO_API_KEY $keys"
+for k in $keys; do
   if [ -f "$S" ] && grep -Eq "^$k=.+" "$S"; then ok $k; else bad $k; fi
 done

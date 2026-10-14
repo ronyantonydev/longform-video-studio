@@ -71,12 +71,18 @@ remind them not to paste keys into the chat.
 
 | Order | Key name | Page | Needed? |
 |---|---|---|---|
-| 1 | `GOOGLE_AI_STUDIO_API_KEY` | https://aistudio.google.com/apikey | Only for the Google voice; skip if using Kokoro |
+| 1 | `GOOGLE_AI_STUDIO_API_KEY` | https://aistudio.google.com/apikey | Only if this is not a Mac (see Voice below) |
 | 2 | `FREESOUND_API_KEY` | https://freesound.org/apiv2/apply | Optional: sound effects |
 
 After each one, run `VideoStudio/.engine/doctor.sh`. It shows only OK or
 MISSING by name, never the key. If a key is still MISSING, help them fix
 where or how it was pasted.
+
+**Voice:** don't ask the person to choose. On a Mac with Apple silicon, use
+**Kokoro** (free, runs on the Mac, no key), so skip key 1. On any other
+computer, use the **Google AI Studio voice** and ask for key 1.
+Write the result into settings.env as `VOICE_PROVIDER=kokoro` or
+`VOICE_PROVIDER=google`.
 
 Also ask them to sign in to **Google Flow** (https://flow.google.com/)
 in the same Chrome, for free generated images. They sign in; you don't.
@@ -84,7 +90,7 @@ in the same Chrome, for free generated images. They sign in; you don't.
 ### Step 5: Local tools
 Ask once, then install:
 - **Parakeet** for word timings and captions: `pip3 install parakeet-mlx`
-- **Kokoro** for a free local voice, if they chose it
+- **Kokoro** for the free local voice (Mac only)
 - **HyperFrames** for editing and rendering, through `npx`
 Run `doctor.sh` again and report in plain words.
 

@@ -4,7 +4,7 @@ Claude fills this in from the videos in style-examples/. You can edit any line.
 
 approvals: script, final
 budget per video (dollars): 15
-voice: google
+voice: default (kokoro on a Mac, google elsewhere)
 voice style: (e.g. calm male narrator, about 150 words per minute)
 
 ## Structure
