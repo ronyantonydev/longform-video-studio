@@ -1,0 +1,23 @@
+HOW TO MAKE A VIDEO
+===================
+
+ONE TIME
+ 1. Double-click  setup.command  and follow the questions.
+ 2. Drop 3-5 videos whose style you want to copy into  style-examples/ .
+
+EACH VIDEO
+ 1. Open Claude in this folder and type:  start a new video called israel-desert-farming
+ 2. Open  videos/israel-desert-farming/brief.txt  and fill in the topic, length, notes.
+ 3. Type:  make the video in israel-desert-farming
+ 4. Claude will stop three times and ask "OK?" (script, look, final video).
+ 5. Your finished files appear in the same folder:
+      video.mp4, thumbnail.png, youtube-description.txt, captions.srt, cost.txt
+
+FEEDBACK
+ Write comments in that video's  feedback.txt  (for example "too slow at the start").
+ Claude fixes that video and asks before saving a lesson for future videos.
+
+GET THE LATEST VERSION
+ Double-click  update.command . Your videos, keys and lessons are never touched.
+
+Do not open or edit the hidden .engine folder.

@@ -1,0 +1,4 @@
+Topic:
+Length (minutes):
+Notes (what to focus on, what to avoid):
+Budget cap in dollars (leave blank for the default):

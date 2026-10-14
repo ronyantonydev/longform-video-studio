@@ -1,0 +1,11 @@
+{
+  "name": "longform-video-studio",
+  "private": true,
+  "type": "module",
+  "description": "Make long-form narrated documentary videos from a plain-text brief, with Claude Code.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test .engine/tests/",
+    "video": "node .engine/src/cli.mjs"
+  }
+}
