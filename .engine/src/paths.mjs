@@ -1,4 +1,8 @@
 // Every path the engine touches, in one place.
+//
+// channels/<channel>/                  visible: style-examples, channel-rules.md, videos/<topic>/
+// .engine/channels/<channel>/          hidden:  channel-profile.json, learned-style.md, monthly-costs.txt
+// .engine/work/<channel>/<topic>/      hidden:  research, script, audio, clips, ledger, renders
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -11,16 +15,19 @@ export const paths = {
   root: ROOT,
   settings: path.join(ENGINE, 'settings', 'settings.env'),
   templates: path.join(ENGINE, 'templates'),
-  monthlyCosts: path.join(ENGINE, 'monthly-costs.txt'),
-  learnedStyle: path.join(ENGINE, 'learned-style.md'),
-  video: (name) => path.join(ROOT, 'videos', name),
-  work: (name) => path.join(ENGINE, 'work', name),
+  channel: (c) => path.join(ROOT, 'channels', c),
+  styleExamples: (c) => path.join(ROOT, 'channels', c, 'style-examples'),
+  channelRules: (c) => path.join(ROOT, 'channels', c, 'channel-rules.md'),
+  channelEngine: (c) => path.join(ENGINE, 'channels', c),
+  monthlyCosts: (c) => path.join(ENGINE, 'channels', c, 'monthly-costs.txt'),
+  video: (c, v) => path.join(ROOT, 'channels', c, 'videos', v),
+  work: (c, v) => path.join(ENGINE, 'work', c, v),
 };
 
-// Project names become folder names, so keep them plain.
-export function checkName(name) {
+// Channel and video names become folder names, so keep them plain.
+export function checkName(name, kind = 'name') {
   if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(name ?? '')) {
-    throw new Error(`"${name}" is not a valid video name. Use lowercase letters, numbers and dashes, e.g. israel-desert-farming.`);
+    throw new Error(`"${name}" is not a valid ${kind}. Use lowercase letters, numbers and dashes, e.g. israel-desert-farming.`);
   }
   return name;
 }

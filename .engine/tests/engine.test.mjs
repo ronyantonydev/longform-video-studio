@@ -8,19 +8,21 @@ import path from 'node:path';
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'video-engine-'));
 process.env.VIDEO_ROOT = root;
 fs.mkdirSync(path.join(root, '.engine', 'templates'), { recursive: true });
-fs.copyFileSync(
-  new URL('../templates/brief.txt', import.meta.url),
-  path.join(root, '.engine', 'templates', 'brief.txt'),
-);
+for (const t of ['brief.txt', 'channel-rules.md']) {
+  fs.copyFileSync(new URL(`../templates/${t}`, import.meta.url), path.join(root, '.engine', 'templates', t));
+}
 
 const { Ledger, BudgetStop } = await import('../src/budget.mjs');
-const { initProject, readBrief, setStage, getStage } = await import('../src/project.mjs');
+const {
+  initChannel, listChannels, initProject, readBrief, setStage, getStage, readApprovals,
+} = await import('../src/project.mjs');
 const { validateResearch, validateScript, estimateMinutes } = await import('../src/validate.mjs');
 const { costText } = await import('../src/cost-report.mjs');
 const { loadSettings, budgetCap, keyStatus } = await import('../src/settings.mjs');
-const { checkName } = await import('../src/paths.mjs');
+const { checkName, paths } = await import('../src/paths.mjs');
 
 const ledgerFile = () => path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'ledger-')), 'ledger.json');
+const videoDir = (c, v) => path.join(root, 'channels', c, 'videos', v);
 
 test('budget: allows spend within the cap and records it', () => {
   const l = new Ledger(ledgerFile(), 10);
@@ -51,8 +53,7 @@ test('budget: an unknown price is refused, never guessed', () => {
 
 test('budget: a released (failed) call costs nothing and frees the reservation', () => {
   const l = new Ledger(ledgerFile(), 5);
-  const id = l.authorize({ step: 'a', item: 'A', estimateUsd: 4 });
-  l.release(id);
+  l.release(l.authorize({ step: 'a', item: 'A', estimateUsd: 4 }));
   assert.equal(l.spent, 0);
   assert.doesNotThrow(() => l.authorize({ step: 'b', item: 'B', estimateUsd: 4 }));
 });
@@ -71,30 +72,65 @@ test('budget: the ledger survives a reload', () => {
   assert.equal(new Ledger(f, 10).spent, 2);
 });
 
+test('channel: setup creates its folders and rules', () => {
+  initChannel('nature-channel');
+  assert.ok(fs.existsSync(path.join(root, 'channels', 'nature-channel', 'style-examples')));
+  assert.ok(fs.existsSync(path.join(root, 'channels', 'nature-channel', 'channel-rules.md')));
+  assert.ok(fs.existsSync(path.join(root, '.engine', 'channels', 'nature-channel')));
+  assert.ok(listChannels().includes('nature-channel'));
+});
+
+test('channel: approvals default to script and final; look only when asked', () => {
+  initChannel('plain-channel');
+  assert.deepEqual(readApprovals('plain-channel'), ['script', 'final']);
+  fs.writeFileSync(paths.channelRules('plain-channel'), 'approvals: script, look, final\n');
+  assert.deepEqual(readApprovals('plain-channel'), ['script', 'look', 'final']);
+  fs.writeFileSync(paths.channelRules('plain-channel'), 'approvals: none\n');
+  assert.deepEqual(readApprovals('plain-channel'), ['script', 'final'], 'script and final cannot be removed');
+});
+
+test('channel: two channels keep separate videos', () => {
+  initChannel('channel-a');
+  initChannel('channel-b');
+  initProject('channel-a', 'same-topic');
+  initProject('channel-b', 'same-topic');
+  setStage('channel-a', 'same-topic', 'done');
+  assert.equal(getStage('channel-a', 'same-topic'), 'done');
+  assert.equal(getStage('channel-b', 'same-topic'), 'new');
+});
+
+test('project: needs an existing channel', () => {
+  assert.throws(() => initProject('no-such-channel', 'x'), /no channel/);
+});
+
 test('project: creates the folders, brief and status', () => {
-  initProject('test-video');
-  assert.ok(fs.existsSync(path.join(root, 'videos', 'test-video', 'brief.txt')));
-  assert.ok(fs.existsSync(path.join(root, 'videos', 'test-video', 'feedback.txt')));
-  assert.equal(getStage('test-video'), 'new');
-  setStage('test-video', 'waiting-script-ok');
+  initProject('nature-channel', 'test-video');
+  assert.ok(fs.existsSync(path.join(videoDir('nature-channel', 'test-video'), 'brief.txt')));
+  assert.ok(fs.existsSync(path.join(videoDir('nature-channel', 'test-video'), 'feedback.txt')));
+  assert.equal(getStage('nature-channel', 'test-video'), 'new');
+  setStage('nature-channel', 'test-video', 'waiting-script-ok');
   assert.match(
-    fs.readFileSync(path.join(root, 'videos', 'test-video', 'status.txt'), 'utf8'),
+    fs.readFileSync(path.join(videoDir('nature-channel', 'test-video'), 'status.txt'), 'utf8'),
     /Waiting for your OK on the script/,
   );
 });
 
 test('project: reads the brief', () => {
-  initProject('brief-video');
+  initProject('nature-channel', 'brief-video');
   fs.writeFileSync(
-    path.join(root, 'videos', 'brief-video', 'brief.txt'),
+    path.join(videoDir('nature-channel', 'brief-video'), 'brief.txt'),
     'Topic: Desert farming\nLength (minutes): 27\nNotes (what to focus on): water\nBudget cap in dollars: $12\n',
   );
-  assert.deepEqual(readBrief('brief-video'), { topic: 'Desert farming', minutes: 27, notes: 'water', budgetUsd: 12 });
+  assert.deepEqual(readBrief('nature-channel', 'brief-video'), {
+    topic: 'Desert farming', minutes: 27, notes: 'water', budgetUsd: 12,
+  });
 });
 
 test('project: an empty brief reads as empty, not as the next line', () => {
-  initProject('empty-brief');
-  assert.deepEqual(readBrief('empty-brief'), { topic: '', minutes: null, notes: '', budgetUsd: undefined });
+  initProject('nature-channel', 'empty-brief');
+  assert.deepEqual(readBrief('nature-channel', 'empty-brief'), {
+    topic: '', minutes: null, notes: '', budgetUsd: undefined,
+  });
 });
 
 test('project: rejects unsafe names', () => {
@@ -137,7 +173,7 @@ test('cost report: shows total, free items and budget left', () => {
   const l = new Ledger(ledgerFile(), 15);
   l.charge(l.authorize({ step: 'voice', item: 'Voice-over', estimateUsd: 4 }), 3.6);
   l.recordFree({ step: 'footage', item: 'Stock video', note: 'free' });
-  const txt = costText('v', l, { title: 'Desert farming' });
+  const txt = costText(l, { title: 'Desert farming' });
   assert.match(txt, /TOTAL COST: \$3\.60 \(under budget by \$11\.40\)/);
   assert.match(txt, /Stock video\s+\$0\.00 {2}free/);
 });

@@ -1,49 +1,56 @@
 # Longform Video Studio
 
-Make 25–30 minute narrated documentary videos from a plain-text brief, using
-Claude Code. Built for people who never want to open a terminal.
+Make 20–30 minute narrated documentary videos for one or many YouTube
+channels, using Claude Code and free tools by default. Each channel keeps its
+own style, image look, sources, voice and budget. Built for people who never
+want to open a terminal.
 
 ```text
-brief.txt → research → script → ✋ OK? → voice → timing → footage → ✋ OK? → render → ✋ OK? → video.mp4
+"make a video for <channel> about <topic>"
+  → research → script → ✋ OK? → voice → timing → footage → render → ✋ OK? → video.mp4
 ```
 
 ## Use it
 
-1. Clone into a folder named after your channel, then double-click `setup.command`.
-2. Drop 3–5 videos whose style you want to match into `style-examples/`.
-3. Open Claude Code in the folder and say: `start a new video called my-topic`.
-4. Fill in `videos/my-topic/brief.txt`, then say: `make the video in my-topic`.
+1. Clone, then double-click `setup.command`.
+2. In Claude Code: `set up channel my-channel`, drop 3–5 example videos into
+   `channels/my-channel/style-examples/`, then `learn the style of my-channel`.
+3. `make a video for my-channel about <topic>`.
 
-Finished files appear in `videos/my-topic/`: `video.mp4`, `thumbnail.png`,
-`youtube-description.txt`, `captions.srt` and `cost.txt`.
+Finished files appear in `channels/my-channel/videos/<topic>/`: `video.mp4`,
+`thumbnail.png`, `youtube-description.txt`, `captions.srt` and `cost.txt`.
 
-Double-click `update.command` to get the latest version. Your videos, keys and
-learned style are never touched by updates.
+Double-click `update.command` to get the latest version. Channels, videos,
+keys and learned style are never touched by updates.
 
 ## Rules it enforces
 
+- **Free tools first.** Paid tools only where a channel opts in.
 - **A budget cap per video**, checked before every paid call. An unknown price
   stops the run instead of being guessed.
 - **Only free-licensed, public-domain, licensed or generated media.** Every
   asset is logged with its source and licence; credits go in the description.
 - **Every fact in the script needs a source link.**
-- **Three human approvals:** script, look, final video.
-- **Feedback becomes lessons** only after you approve each one.
+- **Two human approvals:** the script and the final video (a look check is
+  optional per channel).
+- **Feedback becomes channel lessons** only after you approve each one.
 
 ## Layout
 
 ```text
-style-examples/   videos whose style to match (yours, never committed)
-videos/<name>/    brief, status, outputs, feedback (yours, never committed)
-.engine/          the engine: code, templates, settings (keys stay local)
-.claude/skills/   how Claude runs each step
+channels/<channel>/
+  channel-rules.md      style, images, sources, voice, budget, approvals
+  style-examples/       videos whose style to match (never committed)
+  videos/<topic>/       brief, status, outputs, feedback (never committed)
+.engine/                shared engine: code, templates, settings (keys stay local)
+.claude/skills/         how Claude runs each step
 ```
 
 ## Status
 
-Early. Done: project setup, budget guard and ledger, cost report, research and
-script validation. Next: voice-over, Parakeet timing, footage sourcing,
-HyperFrames render.
+Early. Done: channels, project setup, budget guard and ledger, cost report,
+research and script validation. Next: voice-over, Parakeet timing, footage
+sourcing, HyperFrames render.
 
 ## Development
 

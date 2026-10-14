@@ -7,7 +7,7 @@ if [ ${#missing[@]} -gt 0 ]; then
   echo "Missing tools: ${missing[*]}"
   echo "Install with:  brew install ${missing[*]}"
 fi
-mkdir -p .engine/settings .engine/work videos style-examples
+mkdir -p .engine/settings .engine/work .engine/channels channels
 if [ ! -f .engine/settings/settings.env ]; then
   cp .engine/templates/settings.env.sample .engine/settings/settings.env
   chmod 600 .engine/settings/settings.env

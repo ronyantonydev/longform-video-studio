@@ -1,13 +1,9 @@
 # Client data and secrets: never committed (this repo is public)
 .engine/settings/
 .engine/work/
-.engine/learned-style.md
-.engine/channel-profile.json
-.engine/monthly-costs.txt
-style-examples/*
-!style-examples/.gitkeep
-videos/*
-!videos/.gitkeep
+.engine/channels/
+channels/*
+!channels/.gitkeep
 .env
 *.env
 !.engine/templates/*.sample
