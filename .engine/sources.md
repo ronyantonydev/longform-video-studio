@@ -1,13 +1,12 @@
 # Free sources (always check the licence on each file)
 
 ## Video and photos
-Pexels, Pixabay (API), Wikimedia Commons, NASA, NOAA, USGS, USDA, DVIDS, Voice of America,
+Wikimedia Commons, NASA, NOAA, USGS, USDA, DVIDS, Voice of America,
 ESA, Internet Archive (check each item), Smithsonian Open Access, Library of Congress,
 YouTube clips marked Creative Commons (verify; uploaders sometimes mislabel).
 Images: Flow free image model, FLUX (about $0.003 each) as backup.
 
 ## Sound: music and effects (free options)
-- Pixabay Music and Sound Effects: free for commercial use, no credit needed.
 - YouTube Audio Library: free, needs a Google account in YouTube Studio; some tracks need credit.
 - Freesound: sound effects, CC0 or CC-BY (credit required for BY); has an API key.
 - Mixkit: free music and effects under its own free licence.

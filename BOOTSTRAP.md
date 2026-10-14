@@ -71,10 +71,8 @@ remind them not to paste keys into the chat.
 
 | Order | Key name | Page | Needed? |
 |---|---|---|---|
-| 1 | `PEXELS_API_KEY` | https://www.pexels.com/api/ | Yes: free stock video and photos |
-| 2 | `PIXABAY_API_KEY` | https://pixabay.com/api/docs/ (key shown after login) | Yes: more stock, plus free music |
-| 3 | `GOOGLE_AI_STUDIO_API_KEY` | https://aistudio.google.com/apikey | Only for the Google voice; skip if using Kokoro |
-| 4 | `FREESOUND_API_KEY` | https://freesound.org/apiv2/apply | Optional: sound effects |
+| 1 | `GOOGLE_AI_STUDIO_API_KEY` | https://aistudio.google.com/apikey | Only for the Google voice; skip if using Kokoro |
+| 2 | `FREESOUND_API_KEY` | https://freesound.org/apiv2/apply | Optional: sound effects |
 
 After each one, run `VideoStudio/.engine/doctor.sh`. It shows only OK or
 MISSING by name, never the key. If a key is still MISSING, help them fix

@@ -180,9 +180,9 @@ test('cost report: shows total, free items and budget left', () => {
 
 test('settings: parses the file and reports key names only', () => {
   const f = path.join(root, 'settings.env');
-  fs.writeFileSync(f, '# comment\nBUDGET_CAP_USD=12\nPEXELS_API_KEY=abc\nPIXABAY_API_KEY=\n');
+  fs.writeFileSync(f, '# comment\nBUDGET_CAP_USD=12\nFREESOUND_API_KEY=abc\nGOOGLE_AI_STUDIO_API_KEY=\n');
   const s = loadSettings(f);
   assert.equal(budgetCap(s), 12);
-  assert.deepEqual(keyStatus(s, ['PEXELS_API_KEY', 'PIXABAY_API_KEY']), { PEXELS_API_KEY: true, PIXABAY_API_KEY: false });
+  assert.deepEqual(keyStatus(s, ['FREESOUND_API_KEY', 'GOOGLE_AI_STUDIO_API_KEY']), { FREESOUND_API_KEY: true, GOOGLE_AI_STUDIO_API_KEY: false });
   assert.throws(() => budgetCap({ BUDGET_CAP_USD: 'abc' }));
 });

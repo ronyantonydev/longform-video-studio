@@ -17,7 +17,7 @@ voice style: (e.g. calm male narrator, about 150 words per minute)
 (what generated images should look like: realistic photo, illustration, colours)
 
 ## Preferred free sources
-(e.g. Pexels, Pixabay, Wikimedia, NASA. Listed first = tried first)
+(e.g. Wikimedia, NASA, Internet Archive. Listed first = tried first)
 
 ## Avoid
 (anything this channel never uses)
