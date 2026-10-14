@@ -13,8 +13,7 @@ S=.engine/settings/settings.env
 voice=$( [ -f "$S" ] && sed -n 's/^VOICE_PROVIDER=\([a-z]*\).*/\1/p' "$S" )
 echo "Voice: ${voice:-not set}"
 echo "Keys (names only, values never shown):"
-keys=FREESOUND_API_KEY
-[ "$voice" = google ] && keys="GOOGLE_AI_STUDIO_API_KEY $keys"
+keys="GOOGLE_AI_STUDIO_API_KEY FREESOUND_API_KEY"
 for k in $keys; do
   if [ -f "$S" ] && grep -Eq "^$k=.+" "$S"; then ok $k; else bad $k; fi
 done

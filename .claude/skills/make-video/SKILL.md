@@ -11,8 +11,8 @@ description: Make a long-form documentary video for one channel. Use when the us
    keywords, cited fact ids -> script.json. Run `npm run video -- check <c> <v>` until OK.
 5. STOP (script): show the script and its sources in plain words; wait for OK.
 6. Voice-over with the channel's voice, then Parakeet word timings -> scene lengths, captions.srt.
-7. Per scene, in the channel's source order: free video -> free photo -> generated image in the
-   channel's image style. Log every asset in licence-ledger.json. Keep real motion high.
+7. Per scene, in the channel's source order: free video -> free photo -> Gemini image in the
+   channel's image style (Flow as backup). Log every asset in licence-ledger.json. Keep real motion high.
    Music and effects from .engine/sources.md. If the channel lists "look", STOP and show contact sheets.
 8. Render per chapter with HyperFrames, join with FFmpeg, normalise loudness. Run quality checks.
 9. STOP (final): show the video; swap shots by scene number if asked.

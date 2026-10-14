@@ -4,7 +4,9 @@
 Wikimedia Commons, NASA, NOAA, USGS, USDA, DVIDS, Voice of America,
 ESA, Internet Archive (check each item), Smithsonian Open Access, Library of Congress,
 YouTube clips marked Creative Commons (verify; uploaders sometimes mislabel).
-Images: Flow free image model, FLUX (about $0.003 each) as backup.
+Images: Google Gemini first (Gemini API with the Google AI Studio key). Check the current
+free-tier limits and per-image price before each run; an unknown price stops the run.
+Backup: Google Flow's image model (signed in through Chrome).
 
 ## Sound: music and effects (free options)
 - YouTube Audio Library: free, needs a Google account in YouTube Studio; some tracks need credit.
