@@ -5,7 +5,7 @@ import { paths } from './paths.mjs';
 
 const money = (n) => `$${n.toFixed(2)}`;
 
-export function costText(ledger, { title }) {
+export function costText(ledger, { title, claude = [] }) {
   const charged = ledger.data.entries.filter((e) => e.status === 'charged');
   const total = charged.reduce((s, e) => s + e.actualUsd, 0);
   const width = Math.max(10, ...charged.map((e) => e.item.length));
@@ -23,14 +23,15 @@ export function costText(ledger, { title }) {
     'What it cost:',
     ...(lines.length ? lines : ['  nothing yet']),
     '',
+    ...(claude.length ? [...claude, ''] : []),
     'Monthly subscriptions (for example Epidemic Sound) are not included above.',
     '',
   ].join('\n');
 }
 
-export function writeCostReport(channel, video, ledger, { title = video } = {}) {
+export function writeCostReport(channel, video, ledger, { title = video, claude = [] } = {}) {
   const out = path.join(paths.video(channel, video), 'cost.txt');
-  fs.writeFileSync(out, costText(ledger, { title }));
+  fs.writeFileSync(out, costText(ledger, { title, claude }));
   return out;
 }
 

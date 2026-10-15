@@ -198,3 +198,62 @@ test('steps: every step maps to a pipeline script with the video paths filled in
   assert.ok(cap.at(-1).endsWith(path.join('channels', 'nature-channel', 'videos', 'test-video', 'captions.srt')));
   assert.throws(() => stepCommand('nope', 'nature-channel', 'test-video'), /Unknown step/);
 });
+
+const usage = await import('../src/claude-usage.mjs');
+const W1 = '2026-10-20T19:00:00Z';
+const W2 = '2026-10-27T19:00:00Z';
+
+test('claude usage: weekly share counts the rise across readings', () => {
+  const marks = [{ percent: 10, resetsAt: W1 }, { percent: 12, resetsAt: W1 }, { percent: 15, resetsAt: W1 }];
+  assert.deepEqual(usage.weeklyPercentUsed(marks), { used: 5, resets: 0 });
+  const share = usage.planShare(marks, 100);
+  assert.ok(Math.abs(share.usd - 0.05 * (100 * 12 / 52)) < 1e-9);
+});
+
+test('claude usage: a weekly reset counts the new week from zero', () => {
+  const marks = [{ percent: 90, resetsAt: W1 }, { percent: 95, resetsAt: W1 }, { percent: 4, resetsAt: W2 }];
+  assert.deepEqual(usage.weeklyPercentUsed(marks), { used: 9, resets: 1 });
+});
+
+test('claude usage: no share without a plan price or with one reading', () => {
+  assert.equal(usage.planShare([{ percent: 1, resetsAt: W1 }, { percent: 2, resetsAt: W1 }], 0), null);
+  assert.equal(usage.planShare([{ percent: 1, resetsAt: W1 }], 100), null);
+});
+
+test('claude usage: readings are validated and saved', () => {
+  const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'usage-')), 'claude-usage.json');
+  assert.throws(() => usage.addMark(f, { percent: 'lots', resetsAt: W1 }));
+  assert.throws(() => usage.addMark(f, { percent: 5, resetsAt: 'soon' }));
+  usage.addMark(f, { percent: 5, resetsAt: W1 });
+  assert.equal(usage.readMarks(f).length, 1);
+});
+
+test('claude usage: tokens count each reply once, only inside the window', () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-home-'));
+  const dir = usage.logDir('/Users/me/My Videos', home);
+  assert.ok(dir.endsWith(path.join('projects', '-Users-me-My-Videos')));
+  fs.mkdirSync(path.join(dir, 'sub'), { recursive: true });
+  const line = (id, ts, out) => JSON.stringify({ timestamp: ts, message: { id, model: 'claude-sonnet-5-5',
+    usage: { input_tokens: 1, cache_creation_input_tokens: 10, cache_read_input_tokens: 100, output_tokens: out } } });
+  fs.writeFileSync(path.join(dir, 'a.jsonl'), [
+    line('r1', '2026-10-15T10:00:00Z', 5), line('r1', '2026-10-15T10:00:01Z', 50), // same reply twice: keep the last
+    line('r2', '2026-10-15T11:00:00Z', 20),
+    line('r3', '2026-10-16T10:00:00Z', 999), // outside the window
+    'not json',
+  ].join('\n'));
+  fs.writeFileSync(path.join(dir, 'sub', 'b.jsonl'), line('r4', '2026-10-15T12:00:00Z', 30));
+  const t = usage.tokensBetween(dir, '2026-10-15T00:00:00Z', '2026-10-15T23:59:59Z');
+  assert.deepEqual(t, { 'claude-sonnet-5-5': { input: 3, cacheWrite: 30, cacheRead: 300, output: 100 } });
+});
+
+test('claude usage: cost lines name the model and the plan share, never an API price', () => {
+  const lines = usage.claudeLines({
+    marks: [{ percent: 10, resetsAt: W1 }, { percent: 13, resetsAt: W1 }],
+    monthlyUsd: 100,
+    plan: 'Max',
+    tokens: { 'claude-sonnet-5-5': { input: 1000, cacheWrite: 0, cacheRead: 2_000_000, output: 250_000 } },
+  }).join('\n');
+  assert.match(lines, /Claude Sonnet 5\.5: 2\.0M tokens read \(2\.0M from cache\), 250K written/);
+  assert.match(lines, /Share of your Max plan: \$0\.69 \(3% of a week's limit/);
+  assert.doesNotMatch(lines, /API/);
+});

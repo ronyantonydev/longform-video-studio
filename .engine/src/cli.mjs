@@ -6,6 +6,7 @@
 //   npm run video -- status <channel> <video>
 //   npm run video -- check <channel> <video>    validate research.json and script.json
 //   npm run video -- cost <channel> <video>     write cost.txt
+//   npm run video -- usage <c> <video> <percent> <resetsAt>   record the plan's weekly usage reading
 //   npm run video -- steps                      list the pipeline steps
 //   npm run video -- step <name> <channel> <video> [extra]   run one pipeline step
 import fs from 'node:fs';
@@ -19,6 +20,9 @@ import {
 import { validateResearch, validateScript, estimateMinutes } from './validate.mjs';
 import { writeCostReport } from './cost-report.mjs';
 import { STEPS, runStep } from './steps.mjs';
+import {
+  addMark, readMarks, logDir, tokensBetween, claudeLines,
+} from './claude-usage.mjs';
 
 const argv = process.argv.slice(2);
 const [cmd] = argv;
@@ -84,10 +88,28 @@ try {
       }
       break;
     }
+    case 'usage': {
+      names();
+      const [percent, resetsAt] = extra;
+      const marks = addMark(path.join(paths.work(channel, video), 'claude-usage.json'), { percent, resetsAt });
+      console.log(`Recorded: ${percent}% of the weekly limit used (${marks.length} reading(s) for this video).`);
+      break;
+    }
     case 'cost': {
       names();
+      const settings = loadSettings();
+      const marks = readMarks(path.join(paths.work(channel, video), 'claude-usage.json'));
+      const from = marks[0]?.at ?? fs.statSync(paths.work(channel, video)).birthtime.toISOString();
+      const to = marks.at(-1)?.at ?? new Date().toISOString();
+      const claude = claudeLines({
+        marks,
+        monthlyUsd: Number(settings.CLAUDE_PLAN_USD),
+        plan: settings.CLAUDE_PLAN,
+        tokens: tokensBetween(logDir(paths.root), from, to),
+      });
       const out = writeCostReport(channel, video, ledgerFor(channel, video), {
         title: readBrief(channel, video).topic || video,
+        claude,
       });
       console.log(fs.readFileSync(out, 'utf8'));
       break;
@@ -101,7 +123,7 @@ try {
       break;
     }
     default:
-      console.log('Commands: channel <c> | channels | new <c> <video> | status <c> <video> | check <c> <video> | cost <c> <video> | steps | step <name> <c> <video>');
+      console.log('Commands: channel <c> | channels | new <c> <video> | status <c> <video> | check <c> <video> | cost <c> <video> | usage <c> <video> <percent> <resetsAt> | steps | step <name> <c> <video>');
       process.exitCode = cmd ? 1 : 0;
   }
 } catch (err) {

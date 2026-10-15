@@ -60,6 +60,12 @@ research → script ✋ → voice (Kokoro) → timeline + captions
 Each stage is one command: `npm run video -- steps` lists them. A real 4.7-minute
 pilot came out 98% real archive footage, $0.
 
+## Model
+
+**Claude Sonnet 5.5 is all it needs.** Both pilot videos, from research to final render decisions,
+ran entirely on Sonnet 5.5. Each video's `cost.txt` shows the tokens Claude used and that video's share
+of your Claude plan.
+
 ## Optional paid tools
 
 Higgsfield, fal.ai, ElevenLabs and OpenAI can be switched on per channel. Every

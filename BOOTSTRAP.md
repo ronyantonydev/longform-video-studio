@@ -36,6 +36,8 @@ The person does those. You may *open* pages for them.
 no GitHub login needed).
 
 ### Step 0: Settings that make runs smooth (the person does these)
+- **Model: Claude Sonnet 5.5.** It is all this workflow needs (the pilot videos were made
+  entirely on it). Mac desktop app: pick it in the model menu. Linux: type `/model` and choose it.
 - **Web research on.** Claude Code has web search built in; the project's
   `.claude/settings.json` already allows web search and page reading without
   asking. Check it works by searching for anything small.
@@ -102,6 +104,10 @@ tools in its `channel-rules.md`, and the budget cap still applies.
 | `FAL_KEY` | fal.ai (https://fal.ai/dashboard/keys) | AI images and video from many models |
 | `ELEVENLABS_API_KEY` | ElevenLabs (https://elevenlabs.io/app/settings/api-keys) | Premium voice |
 | `OPENAI_API_KEY` | OpenAI (https://platform.openai.com/api-keys) | Voice or images |
+
+**Claude plan.** Ask which Claude plan they have and its monthly price (for example Max, $100).
+They write it into settings.env as `CLAUDE_PLAN=` and `CLAUDE_PLAN_USD=`, so every video's cost.txt
+shows that video's share of the plan.
 
 After each key, run `bash VideoStudio/.engine/doctor.sh`. It shows only OK,
 MISSING or optional by name, never the key.

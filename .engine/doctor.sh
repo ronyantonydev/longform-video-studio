@@ -22,6 +22,7 @@ voice=$( [ -f "$S" ] && sed -n 's/^VOICE_PROVIDER=\([a-z]*\).*/\1/p' "$S" )
 echo "Voice: ${voice:-not set}"
 echo "Keys (names only, values never shown):"
 has GOOGLE_AI_STUDIO_API_KEY && ok GOOGLE_AI_STUDIO_API_KEY || bad "GOOGLE_AI_STUDIO_API_KEY (Gemini images$( [ "$voice" = google ] && echo ' and voice'))"
+has CLAUDE_PLAN_USD && ok "CLAUDE_PLAN_USD (plan price, for cost.txt)" || opt "CLAUDE_PLAN_USD (plan price, so cost.txt can show each video's share)"
 has FREESOUND_API_KEY && ok FREESOUND_API_KEY || opt "FREESOUND_API_KEY (sound effects)"
 for k in HIGGSFIELD_API_KEY FAL_KEY ELEVENLABS_API_KEY OPENAI_API_KEY; do
   has $k && ok "$k (paid, optional)" || opt "$k (paid, off)"

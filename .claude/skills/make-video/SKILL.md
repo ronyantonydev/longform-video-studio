@@ -4,7 +4,12 @@ description: Make a documentary video for one channel, footage first. Use when t
 ---
 Run every step through `npm run video -- step <name> <c> <v>` (list: `npm run video -- steps`).
 Work files live in .engine/work/<c>/<v>/ ("work"); outputs in channels/<c>/videos/<v>/.
-Keep status.txt current with plain words. Never improvise a pipeline script that already exists;
+Keep status.txt current with plain words.
+
+**Plan usage readings.** At the start, at each STOP, and at the end, read the plan's usage (in the
+Claude desktop app: the get_usage tool, window "Weekly · all models") and record it with
+`npm run video -- usage <c> <v> <percentUsed> <resetsAt>`. If plan limits can't be read here, skip it;
+cost.txt then shows tokens only. Never improvise a pipeline script that already exists;
 if a step is missing or wrong, fix it in .engine/pipeline/, test it, and note it in
 .engine/suggested-improvements.md.
 
@@ -37,7 +42,8 @@ if a step is missing or wrong, fix it in .engine/pipeline/, test it, and note it
 9. **STOP: final.** Show the video; swap shots by editing plan.json and re-running `plan`, `fit`,
    `build`, `finish`, `qa`.
 10. **Deliver.** youtube-description.txt (title, chapter timestamps, every credit from
-    work/licence-ledger.json), then `npm run video -- cost <c> <v>`. Report in plain words:
+    work/licence-ledger.json), take the last usage reading, then `npm run video -- cost <c> <v>`
+    (adds Claude's tokens and the video's share of the plan). Report in plain words:
     video share, clips per source, scenes without real footage, cost, what to improve.
 
 Paid tools (Higgsfield, fal, ElevenLabs, OpenAI) only if the channel's rules allow them and the key
