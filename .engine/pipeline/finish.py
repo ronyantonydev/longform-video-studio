@@ -2,7 +2,7 @@
 """Render the picture, mix voice and music, join them, and pick a thumbnail.
 
 1. Render <work>/hf with HyperFrames -> <work>/out/picture.mp4 (skipped if already newer than the edit).
-2. Mix: narration plus optional music from plan.json ("music": {"file": "music/x.ogg", ...}), music ducked
+2. Mix: narration plus optional music from plan.json ("music": {"file": "music/x.ogg", "volume": 0.3, ...}), music ducked
    under the voice and faded out, whole mix normalised to -14 LUFS (YouTube's loudness).
 3. Join picture and sound -> <video_dir>/video.mp4.
 4. Thumbnail: the strongest of 12 frames from the finished video -> <video_dir>/thumbnail.png.
@@ -62,8 +62,9 @@ def mix(work):
     loud = "loudnorm=I=-14:TP=-1.5:LRA=11"
     if music:
         fade = max(total - 4, 0)
+        volume = float(music.get("volume", 0.30))  # plan.json: music.volume, 0.1 quiet to 0.6 loud
         graph = (f"[0:a]aresample=48000,asplit=2[v1][v2];"
-                 f"[1:a]aresample=48000,volume=0.30,afade=t=out:st={fade:.2f}:d=4[m];"
+                 f"[1:a]aresample=48000,volume={volume:.2f},afade=t=out:st={fade:.2f}:d=4[m];"
                  f"[m][v1]sidechaincompress=threshold=0.03:ratio=6:attack=30:release=500[md];"
                  f"[v2][md]amix=inputs=2:duration=first:normalize=0,{loud}[a]")
         cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(narration), "-stream_loop", "-1",

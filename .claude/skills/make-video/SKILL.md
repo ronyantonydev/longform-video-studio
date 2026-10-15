@@ -46,5 +46,14 @@ if a step is missing or wrong, fix it in .engine/pipeline/, test it, and note it
     (adds Claude's tokens and the video's share of the plan). Report in plain words:
     video share, clips per source, scenes without real footage, cost, what to improve.
 
+**Corrections after a review.** Edit work/plan.json or the script, then re-run only what changed:
+- swap, add or remove a shot, change a shot's length (`d`), an on-screen line (`overlay`), or the
+  music (`music.volume`): `plan`, `fit`, `build`, `finish`, `qa`;
+- change narration or fix a fact: update research.json and script.json, run `check`, then `voice`,
+  `join`, `captions`, re-plan any scene whose length changed, then `plan` through `qa`;
+- captions come from the script text, so fix a caption by fixing the script line.
+Always say which timestamps changed, and keep youtube-description.txt credits in step with the
+licence ledger after any change to the clips.
+
 Paid tools (Higgsfield, fal, ElevenLabs, OpenAI) only if the channel's rules allow them and the key
 exists. Every paid call: Ledger.authorize first, then charge or release. Free items: recordFree.

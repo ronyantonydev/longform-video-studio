@@ -9,7 +9,8 @@ plan.json (written by Claude after looking at the contact sheets):
                        "licence": "Public domain (US government work)"}},
   "modern":  {"clip.webm": {"label": "USDA · NRCS", "url": "https://commons.wikimedia.org/...", "licence": "Public domain"}},
   "photos":  {"fdr1": {"label": "Photograph · National Archives", "url": "...", "licence": "Public domain"}},
-  "music":   {"file": "music/track.ogg", "title": "...", "artist": "...", "url": "...", "licence": "CC BY 3.0"},
+  "music":   {"file": "music/track.ogg", "title": "...", "artist": "...", "url": "...", "licence": "CC BY 3.0",
+             "volume": 0.3},   (optional; 0.1 quiet to 0.6 loud)
   "plan": {"s01": [["v", "plow", 134], ["v", "plow", 141, 2.0], ["m", "clip.webm", 20, {"d": 3.7, "bw": true}],
                    ["p", "fdr1"], ["c", "Big line", "Small line"]]}
 }
