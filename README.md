@@ -12,7 +12,9 @@ want to open a terminal.
 
 ## Use it
 
-1. Clone, then double-click `setup.command`.
+1. Easiest: open an empty folder in Claude and say
+   `Read https://raw.githubusercontent.com/ronyantonydev/longform-video-studio/main/BOOTSTRAP.md and set me up`.
+   Or clone, then run `bash setup.command`.
 2. In Claude Code: `set up channel my-channel`, drop 3–5 example videos into
    `channels/my-channel/style-examples/`, then `learn the style of my-channel`.
 3. `make a video for my-channel about <topic>`.
@@ -46,11 +48,22 @@ channels/<channel>/
 .claude/skills/         how Claude runs each step
 ```
 
-## Status
+## How a video is made
 
-Early. Done: channels, project setup, budget guard and ledger, cost report,
-research and script validation. Next: voice-over, Parakeet timing, footage
-sourcing, HyperFrames render.
+```text
+research → script ✋ → voice (Kokoro) → timeline + captions
+  → footage first: archive films (National Archives, Internet Archive, USDA, NPS ...),
+    Wikimedia Commons video and photos, Gemini images only as a last resort
+  → shot catalog → plan.json → edit (HyperFrames) → render, music, loudness → checks ✋
+```
+
+Each stage is one command: `npm run video -- steps` lists them. A real 4.7-minute
+pilot came out 98% real archive footage, $0.
+
+## Optional paid tools
+
+Higgsfield, fal.ai, ElevenLabs and OpenAI can be switched on per channel. Every
+paid call is checked against the budget cap first; an unknown price stops the run.
 
 ## Development
 
@@ -58,4 +71,5 @@ sourcing, HyperFrames render.
 npm test
 ```
 
-Node 18+. No dependencies.
+Mac (Apple chip) or Linux. Node 22+, Python 3.10+, FFmpeg. Python packages are
+listed in `.engine/pipeline/requirements.txt` and installed by `setup.command`.

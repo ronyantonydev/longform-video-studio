@@ -1,6 +1,8 @@
 # Free sources (always check the licence on each file)
 
-## Video and photos
+## Video and photos (video first)
+Archive films: National Archives catalog, Internet Archive (Prelinger and US government films; check
+rights with step `ia`), USDA, NRCS, National Park Service, US Fish and Wildlife Service.
 Wikimedia Commons, NASA, NOAA, USGS, USDA, DVIDS, Voice of America,
 ESA, Internet Archive (check each item), Smithsonian Open Access, Library of Congress,
 YouTube clips marked Creative Commons (verify; uploaders sometimes mislabel).

@@ -3,9 +3,11 @@
   "private": true,
   "type": "module",
   "description": "Make long-form narrated documentary videos from a plain-text brief, with Claude Code.",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "test": "node --test .engine/tests/",
+    "test": "node --test .engine/tests/ && python3 -m unittest discover -s .engine/tests -p '*_test.py'",
     "video": "node .engine/src/cli.mjs"
   }
 }

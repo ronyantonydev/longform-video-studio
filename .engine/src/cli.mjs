@@ -6,6 +6,8 @@
 //   npm run video -- status <channel> <video>
 //   npm run video -- check <channel> <video>    validate research.json and script.json
 //   npm run video -- cost <channel> <video>     write cost.txt
+//   npm run video -- steps                      list the pipeline steps
+//   npm run video -- step <name> <channel> <video> [extra]   run one pipeline step
 import fs from 'node:fs';
 import path from 'node:path';
 import { paths, checkName } from './paths.mjs';
@@ -16,8 +18,12 @@ import {
 } from './project.mjs';
 import { validateResearch, validateScript, estimateMinutes } from './validate.mjs';
 import { writeCostReport } from './cost-report.mjs';
+import { STEPS, runStep } from './steps.mjs';
 
-const [cmd, channel, video] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const [cmd] = argv;
+// `step` takes the step name first; everything else is <channel> <video>.
+const [channel, video, ...extra] = cmd === 'step' ? argv.slice(2) : argv.slice(1);
 const readJson = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null);
 
 function names() {
@@ -86,8 +92,16 @@ try {
       console.log(fs.readFileSync(out, 'utf8'));
       break;
     }
+    case 'steps':
+      for (const [k, v] of Object.entries(STEPS)) console.log(`${k.padEnd(9)} ${v.what}`);
+      break;
+    case 'step': {
+      names();
+      process.exitCode = runStep(argv[1], channel, video, extra);
+      break;
+    }
     default:
-      console.log('Commands: channel <c> | channels | new <c> <video> | status <c> <video> | check <c> <video> | cost <c> <video>');
+      console.log('Commands: channel <c> | channels | new <c> <video> | status <c> <video> | check <c> <video> | cost <c> <video> | steps | step <name> <c> <video>');
       process.exitCode = cmd ? 1 : 0;
   }
 } catch (err) {

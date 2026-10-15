@@ -1,0 +1,9 @@
+# Python packages for the pipeline steps. setup.command installs them into .engine/.venv
+numpy
+soundfile
+Pillow
+certifi
+kokoro-onnx
+# Speech-to-text for learning a channel's style
+parakeet-mlx; sys_platform == "darwin"
+faster-whisper; sys_platform == "linux"

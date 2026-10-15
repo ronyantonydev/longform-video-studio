@@ -1,6 +1,10 @@
 # Client data and secrets: never committed (this repo is public)
 .engine/settings/
 .engine/work/
+.engine/.venv/
+.engine/learned-global.md
+.engine/suggested-improvements.md
+__pycache__/
 .engine/channels/
 channels/*
 !channels/.gitkeep

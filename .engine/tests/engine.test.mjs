@@ -186,3 +186,15 @@ test('settings: parses the file and reports key names only', () => {
   assert.deepEqual(keyStatus(s, ['FREESOUND_API_KEY', 'GOOGLE_AI_STUDIO_API_KEY']), { FREESOUND_API_KEY: true, GOOGLE_AI_STUDIO_API_KEY: false });
   assert.throws(() => budgetCap({ BUDGET_CAP_USD: 'abc' }));
 });
+
+test('steps: every step maps to a pipeline script with the video paths filled in', async () => {
+  const { STEPS, stepCommand } = await import('../src/steps.mjs');
+  for (const name of Object.keys(STEPS)) {
+    const [, args] = stepCommand(name, 'nature-channel', 'test-video', ['a.mp4', 'film']);
+    assert.match(args[0], /\.engine\/pipeline\/\w+\.py$/, name);
+    assert.ok(fs.existsSync(args[0]), `${name}: ${args[0]} exists`);
+  }
+  const [, cap] = stepCommand('captions', 'nature-channel', 'test-video');
+  assert.ok(cap.at(-1).endsWith(path.join('channels', 'nature-channel', 'videos', 'test-video', 'captions.srt')));
+  assert.throws(() => stepCommand('nope', 'nature-channel', 'test-video'), /Unknown step/);
+});

@@ -14,7 +14,10 @@ Turn a topic into a short dashed name for the folder (e.g. israel-desert-farming
 ## Hard rules
 - Claude plans; code spends. Every paid call goes through the Ledger (.engine/src/budget.mjs).
   Unknown price = stop and ask. Never exceed the budget without asking.
-- Defaults are free tools. Paid tools only if the channel's channel-rules.md or settings.env says so.
+- Defaults are free tools. Paid tools (Higgsfield, fal, ElevenLabs, OpenAI) only if the channel's
+  channel-rules.md allows them and the key is in settings.env.
+- Footage first: real video before photos, photos before generated images. Target the channel's video
+  share (default 70%, flexible). Run pipeline steps with `npm run video -- step`; don't rewrite them.
 - Footage, images and audio: only free-licensed, public-domain, licensed, or generated.
   NEVER download clips from news sites, other YouTube videos, or watermarked previews.
   Never reuse footage from a channel's style-examples; they teach style only.
@@ -32,4 +35,7 @@ Turn a topic into a short dashed name for the folder (e.g. israel-desert-farming
 - .engine/channels/<c>/               - channel-profile.json, learned-style.md, monthly-costs.txt
 - .engine/work/<c>/<v>/               - research.json, script.json, audio, clips, ledger.json, renders
 - .engine/sources.md                  - free footage, image, sound and voice sources
-- .engine/settings/settings.env       - shared keys for all channels
+- .engine/settings/settings.env       - shared keys for all channels (never read it; doctor.sh checks it)
+- .engine/learned-global.md           - approved lessons for every channel
+- .engine/suggested-improvements.md   - engine fixes to send to the maintainer
+- .engine/pipeline/                   - the pipeline steps (Python), run via `npm run video -- step`

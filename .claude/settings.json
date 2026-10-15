@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash(npm run video:*)",
+      "Bash(bash .engine/doctor.sh)"
+    ],
+    "deny": [
+      "Read(.engine/settings/**)"
+    ]
+  }
+}

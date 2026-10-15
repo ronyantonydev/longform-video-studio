@@ -19,6 +19,8 @@ export const paths = {
   styleExamples: (c) => path.join(ROOT, 'channels', c, 'style-examples'),
   channelRules: (c) => path.join(ROOT, 'channels', c, 'channel-rules.md'),
   channelEngine: (c) => path.join(ENGINE, 'channels', c),
+  globalLessons: path.join(ENGINE, 'learned-global.md'),
+  suggestions: path.join(ENGINE, 'suggested-improvements.md'),
   monthlyCosts: (c) => path.join(ENGINE, 'channels', c, 'monthly-costs.txt'),
   video: (c, v) => path.join(ROOT, 'channels', c, 'videos', v),
   work: (c, v) => path.join(ENGINE, 'work', c, v),
